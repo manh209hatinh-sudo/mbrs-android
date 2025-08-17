@@ -69,11 +69,14 @@ jobs:
             "platforms;android-31" \
             "build-tools;31.0.0"
 
+          # Debug: check aidl exists
+          echo ">>> Checking aidl in build-tools"
+          ls -l $HOME/android-sdk/build-tools/31.0.0 || true
+          ls -l $HOME/android-sdk/build-tools/31.0.0/aidl* || true
+
           # Add build-tools to PATH + ép vào ENV
-          echo "$ANDROID_SDK_ROOT/build-tools/31.0.0" >> $GITHUB_PATH
-          echo "PATH=$ANDROID_SDK_ROOT/build-tools/31.0.0:$PATH" >> $GITHUB_ENV
-          echo "PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH" >> $GITHUB_ENV
-          echo "PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+          echo "$HOME/android-sdk/build-tools/31.0.0" >> $GITHUB_PATH
+          echo "PATH=$HOME/android-sdk/build-tools/31.0.0:$PATH" >> $GITHUB_ENV
 
       - name: Build debug APK
         run: |
