@@ -67,16 +67,21 @@ jobs:
           yes | sdkmanager --licenses
           sdkmanager "platform-tools" \
             "platforms;android-31" \
-            "build-tools;31.0.0"
+            "build-tools;30.0.3" \
+            "build-tools;31.0.0" \
+            "build-tools;33.0.2"
 
-          # Debug: check aidl exists
           echo ">>> Checking aidl in build-tools"
+          ls -l $HOME/android-sdk/build-tools/30.0.3 || true
+          ls -l $HOME/android-sdk/build-tools/30.0.3/aidl* || true
           ls -l $HOME/android-sdk/build-tools/31.0.0 || true
           ls -l $HOME/android-sdk/build-tools/31.0.0/aidl* || true
+          ls -l $HOME/android-sdk/build-tools/33.0.2 || true
+          ls -l $HOME/android-sdk/build-tools/33.0.2/aidl* || true
 
-          # Add build-tools to PATH + ép vào ENV
-          echo "$HOME/android-sdk/build-tools/31.0.0" >> $GITHUB_PATH
-          echo "PATH=$HOME/android-sdk/build-tools/31.0.0:$PATH" >> $GITHUB_ENV
+          # Ưu tiên build-tools 30.0.3 (ổn định nhất)
+          echo "$HOME/android-sdk/build-tools/30.0.3" >> $GITHUB_PATH
+          echo "PATH=$HOME/android-sdk/build-tools/30.0.3:$PATH" >> $GITHUB_ENV
 
       - name: Build debug APK
         run: |
