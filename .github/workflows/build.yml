@@ -34,9 +34,9 @@ jobs:
             libssl-dev \
             libffi-dev \
             libsqlite3-dev \
-            libncurses5 \
-            libncurses5-dev \
-            libtinfo5
+            libncurses6 \
+            libncurses-dev \
+            libtinfo6
 
       - name: Install buildozer + p4a
         run: |
