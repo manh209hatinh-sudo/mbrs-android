@@ -47,6 +47,11 @@ jobs:
       - name: Add pip user bin to PATH
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
+      - name: Install Android SDK Build Tools
+        run: |
+          yes | sdkmanager --licenses || true
+          sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+
       - name: Build debug APK
         run: |
           buildozer init || true
