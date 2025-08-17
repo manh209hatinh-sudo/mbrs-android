@@ -56,7 +56,6 @@ jobs:
           unzip cmdline-tools.zip
           mv cmdline-tools latest
           
-          # Xuất biến môi trường
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
@@ -67,21 +66,20 @@ jobs:
           yes | sdkmanager --licenses
           sdkmanager "platform-tools" \
             "platforms;android-31" \
-            "build-tools;30.0.3" \
-            "build-tools;31.0.0" \
-            "build-tools;33.0.2"
+            "build-tools;30.0.3"
 
           echo ">>> Checking aidl in build-tools"
           ls -l $HOME/android-sdk/build-tools/30.0.3 || true
           ls -l $HOME/android-sdk/build-tools/30.0.3/aidl* || true
-          ls -l $HOME/android-sdk/build-tools/31.0.0 || true
-          ls -l $HOME/android-sdk/build-tools/31.0.0/aidl* || true
-          ls -l $HOME/android-sdk/build-tools/33.0.2 || true
-          ls -l $HOME/android-sdk/build-tools/33.0.2/aidl* || true
 
-          # Ưu tiên build-tools 30.0.3 (ổn định nhất)
-          echo "$HOME/android-sdk/build-tools/30.0.3" >> $GITHUB_PATH
+          # Xuất env ép Buildozer phải thấy aidl
           echo "PATH=$HOME/android-sdk/build-tools/30.0.3:$PATH" >> $GITHUB_ENV
+          echo "PATH=$HOME/android-sdk/platform-tools:$PATH" >> $GITHUB_ENV
+          echo "ANDROIDAPI=31" >> $GITHUB_ENV
+          echo "ANDROIDNDKVER=r25b" >> $GITHUB_ENV
+          echo "ANDROIDSDK=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROIDNDK=$HOME/.buildozer/android/platform/android-ndk-r25b" >> $GITHUB_ENV
+          echo "AIDL=$HOME/android-sdk/build-tools/30.0.3/aidl" >> $GITHUB_ENV
 
       - name: Build debug APK
         run: |
