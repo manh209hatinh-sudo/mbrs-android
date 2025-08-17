@@ -8,30 +8,44 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y python3-pip build-essential git zip unzip openjdk-17-jdk
-        pip install --upgrade pip
-        pip install buildozer cython virtualenv
+      - name: Install APT packages
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential git zip unzip openjdk-17-jdk
 
-    - name: Build APK
-      run: |
-        buildozer init || true
-        buildozer android debug
+      - name: Install python tools (buildozer)
+        run: |
+          python3 -m pip install --user --upgrade pip
+          python3 -m pip install --user cython virtualenv buildozer
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: MyApp-APK
-        path: bin/*.apk
+      - name: Ensure pip user bin on PATH for this job
+        env:
+          PATH: ${{ runner.home }}/.local/bin:${{ env.PATH }}
+        run: echo "Using PATH=$PATH"
+
+      - name: Initialize & Build debug APK
+        env:
+          PATH: ${{ runner.home }}/.local/bin:${{ env.PATH }}
+        run: |
+          # ensure buildozer config exists
+          buildozer init || true
+          # build (this can take long the first time)
+          buildozer android debug -v
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload debug APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: bin/*.apk
