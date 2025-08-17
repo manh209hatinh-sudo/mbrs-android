@@ -65,7 +65,17 @@ jobs:
         run: |
           sdkmanager --version
           yes | sdkmanager --licenses
-          sdkmanager "platform-tools" "platforms;android-31" "build-tools;31.0.0"
+          sdkmanager "platform-tools" \
+            "platforms;android-31" \
+            "platforms;android-33" \
+            "build-tools;30.0.3" \
+            "build-tools;31.0.0" \
+            "build-tools;33.0.2"
+
+          # Add build-tools to PATH
+          echo "$ANDROID_SDK_ROOT/build-tools/30.0.3" >> $GITHUB_PATH
+          echo "$ANDROID_SDK_ROOT/build-tools/31.0.0" >> $GITHUB_PATH
+          echo "$ANDROID_SDK_ROOT/build-tools/33.0.2" >> $GITHUB_PATH
 
       - name: Build debug APK
         run: |
