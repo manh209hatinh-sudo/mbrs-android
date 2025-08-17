@@ -66,3 +66,21 @@ jobs:
           sdkmanager --version
           yes | sdkmanager --licenses
           sdkmanager "platform-tools" "platforms;android-33"
+      - name: Accept licenses & Install build-tools
+        run: |
+          sdkmanager --version
+          yes | sdkmanager --licenses
+          sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2"
+
+      - name: Build debug APK
+        run: |
+          buildozer init || true
+          buildozer android debug -v
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: |
+            bin/**/*.apk
+            *.apk
