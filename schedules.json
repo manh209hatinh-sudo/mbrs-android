@@ -1,0 +1,11 @@
+{
+  "default": [
+    "Check email",
+    "Workout",
+    "Read 30 mins"
+  ],
+  "busy": [
+    "Meetings AM",
+    "Client call PM"
+  ]
+}
