@@ -22,27 +22,20 @@ jobs:
       - name: Install APT packages
         run: |
           sudo apt update
-          sudo apt install -y build-essential git zip unzip openjdk-17-jdk
+          sudo apt install -y build-essential git zip unzip openjdk-17-jdk python3-pip python3-setuptools python3-wheel
 
       - name: Install python tools (buildozer)
         run: |
-          python3 -m pip install --user --upgrade pip
-          python3 -m pip install --user cython virtualenv buildozer
+          pip install --upgrade pip
+          pip install cython virtualenv buildozer
 
-      - name: Ensure pip user bin on PATH for this job
-        env:
-          PATH: ${{ runner.home }}/.local/bin:${{ env.PATH }}
-        run: echo "Using PATH=$PATH"
+      - name: Add pip user bin to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      - name: Initialize & Build debug APK
-        env:
-          PATH: ${{ runner.home }}/.local/bin:${{ env.PATH }}
+      - name: Build debug APK
         run: |
-          # ensure buildozer config exists
           buildozer init || true
-          # build (this can take long the first time)
           buildozer android debug -v
-        working-directory: ${{ github.workspace }}
 
       - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
